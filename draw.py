@@ -17,7 +17,7 @@ radius = 50
 
 # Values
 name = "A"
-duration = 10
+duration = 20
 es = 0
 ef = 0
 ls = 0
@@ -57,20 +57,26 @@ t.penup()
 
 # ----------------------------------------- Text ----------------------------------------- #
 
-# Name
-t.goto(x - (radius / 3) , y + radius / 4)
-t.write(name, align="center", font=(font, size, format))
+if duration != 0:
 
-# Duration
-t.goto(x + radius / 3 , y + radius / 4)
-t.write(duration, align="center", font=(font, size, format))
+    # Name
+    t.goto(x - (radius / 3) , y + radius / 4)
+    t.write(name, align="center", font=(font, size, format))
+
+    # Duration
+    t.goto(x + radius / 3 , y + radius / 4)
+    t.write(duration, align="center", font=(font, size, format))
+
+else:
+
+    # Name
+    t.goto(x, y + radius / 4)
+    t.write(name, align="center", font=(font, size, format))
 
 '''
-
-ES | EF
--------
-LS | LF
-
+    ES | EF
+    -------
+    LS | LF
 '''
 # ES
 t.goto(x - radius / 4 , y - radius / 2 )
