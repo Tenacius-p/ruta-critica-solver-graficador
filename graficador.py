@@ -3,12 +3,20 @@ from PIL import Image
 from PIL import EpsImagePlugin
 import io
 
+# ------------------------- Funciones ------------------------- #
+def line(x_1, y_1, x_2,  y_2, t):
+
+    t.penup()
+    t.goto(x_1, y_1)
+    t.pendown()
+    t.goto(x_2, y_2)
+    t.penup()
+
 
 # ------------------------- Clase Nodo ------------------------- #
-
 class nodo: 
 
-    def __init__(self, nombre, duracion, x, y, radio = 50, es = 0, ef = 0, ls = 0, lf = 0):
+    def __init__(self, nombre, duracion, x, y, es = 0, ef = 0, ls = 0, lf = 0, radio = 50):
         self.nombre = nombre
         self.duracion = duracion
         
@@ -22,128 +30,108 @@ class nodo:
         self.radio = radio
         self.dock_right = x + radio
         self.dock_left = x - radio
+        self.font = "Arial"
+        self.size = 15
+        self.format = "normal"
 
-    def draw():
+
+    def draw(self, tort):
         # ---------------- Circulo ---------------- #
+        tort.penup()
+        tort.goto(self.x, self.y - self.radio)
+        tort.pendown()
+
+        tort.circle(self.radio)
+
+        # ---------- Cruz (20% de radio) ---------- #
+        # 20% of radius
+        padding = round(self.radio * 0.2 / 2)
+        length = round(self.radio * 0.8)
+
+        # |
+        line(self.x, self.y - padding,
+             self.x, self.y - padding - length, tort)
+
+        # --
+        line(self.x + length / 2 , self.y - self.radio / 2,
+             self.x + length / 2 - length, self.y - self.radio / 2, tort)
+
+        # ---------- Texto ----------
+        if self.duracion != 0:
+
+            # Name
+            tort.goto(self.x - (self.radio / 3) , self.y + self.radio / 4)
+            tort.write(self.nombre, align="center", font=(self.font, self.size, self.format))
+
+            # Duration
+            tort.goto(self.x + self.radio / 3 , self.y + self.radio / 4)
+            tort.write(self.duracion, align="center", font=(self.font, self.size, self.format))
+
+        else:
+
+            # Name
+            tort.goto(self.x, self.y + self.radio / 4)
+            tort.write(self.nombre, align="center", font=(self.font, self.size, self.format))
+
+        '''
+            ES | EF
+            -------
+            LS | LF
+        '''
+        # ES
+        tort.goto(self.x - self.radio / 4 , self.y - self.radio / 2 )
+        tort.write(self.es, align="center", font=(self.font, self.size, self.format))
+
+        # EF
+        tort.goto(self.x + self.radio / 4 , self.y - self.radio / 2 )
+        tort.write(self.ef, align="center", font=(self.font, self.size, self.format))
+
+        # LS
+        tort.goto(self.x - self.radio / 4 , self.y - self.radio + padding)
+        tort.write(self.ls, align="center", font=(self.font, self.size, self.format))
+
+        # LF
+        tort.goto(self.x + self.radio / 4 , self.y - self.radio + padding)
+        tort.write(self.lf, align="center", font=(self.font, self.size, self.format))
+
 
 
 # ------------------------- Clase Graficador ------------------------- #
-
 class graficador:
 
-    def __init__(self, font = "Arial", size  = 20, format =  "normal", radio = 50):
-        
-        self.font = font
-        self.size = size
-        self.format = format
-        self.radio = radio
+    def __init__(self, nodos):
+        self.nodos = nodos
         self.tort = turtle.Turtle()
-
         self.tort.hideturtle()
-        self.tort.tracer(False)
+        self.tort._tracer(False)
+        self.tort.pensize(2)
 
-    def draw()
+    def draw(self):
+        capa_x = -400
+        
+
+        for capa in self.nodos:
+            cantidad_nodos = len(capa)
+            nodo_y = 0
+
+            if cantidad_nodos == 1:
+                nodo_y = 0
+            else:
+                nodo_y += ( (cantidad_nodos - 1) * 2 * nodo.radio)
+                    
+            for nodo in capa:
+                nodo.x = capa_x
+                nodo.y = nodo_y
+                nodo.draw(self.tort)
+                nodo_y -= + (4 * nodo.radio)
+
+            capa_x += (3 * nodo.radio)
+
+
         pass
 
-
-
-
-# ------------------------- Clase Graficador ------------------------- #
-
-t = turtle.Turtle()
-t.hideturtle()
-turtle.tracer(False)
-
-# font
-font = "Arial"
-size = 20
-format = "normal"
-
-# Size
-radius = 50
-
-# Values
-name = "A"
-duration = 20
-es = 0
-ef = 0
-ls = 0
-lf = 0
-
-# Coords
-x = 0
-y = 0
-dock_right = x + radius
-dock_left = x - radius
-
-# ----------------------------------------- Circle ----------------------------------------- #
-t.penup()
-t.goto(x, y - radius)
-t.pendown()
-
-t.circle(radius)
-
-# ----------------------------------------- Cross ----------------------------------------- #
-# 20% of radius
-padding = round(radius * 0.2 / 2)
-length = round(radius * 0.8)
-
-# top down line
-t.penup()
-t.goto(x, y - padding)
-t.pendown()
-t.goto(x, y - padding - length)
-
-# right left line
-t.penup()
-t.goto(x + length / 2 , y - radius / 2)
-t.pendown()    
-t.goto( t.xcor() - length , t.ycor())
-
-t.penup()
-
-# ----------------------------------------- Text ----------------------------------------- #
-
-if duration != 0:
-
-    # Name
-    t.goto(x - (radius / 3) , y + radius / 4)
-    t.write(name, align="center", font=(font, size, format))
-
-    # Duration
-    t.goto(x + radius / 3 , y + radius / 4)
-    t.write(duration, align="center", font=(font, size, format))
-
-else:
-
-    # Name
-    t.goto(x, y + radius / 4)
-    t.write(name, align="center", font=(font, size, format))
-
-'''
-    ES | EF
-    -------
-    LS | LF
-'''
-# ES
-t.goto(x - radius / 4 , y - radius / 2 )
-t.write(es, align="center", font=(font, size, format))
-
-# EF
-t.goto(x + radius / 4 , y - radius / 2 )
-t.write(ef, align="center", font=(font, size, format))
-
-# LS
-t.goto(x - radius / 4 , y - radius)
-t.write(ls, align="center", font=(font, size, format))
-
-# LF
-t.goto(x + radius / 4 , y - radius)
-t.write(lf, align="center", font=(font, size, format))
-
-# ----------------------------------------- Save as PNG ----------------------------------------- #
-
-ps = t.getscreen().getcanvas().postscript(colormode="color")
-EpsImagePlugin.gs_windows_binary = "./Ghostscript/gs10.03.0/bin/gswin64c.exe"
-im = Image.open(io.BytesIO(ps.encode("utf-8")))
-im.save('RED.png', format="PNG")
+    def save(self):
+        ps = self.tort.getscreen().getcanvas().postscript(colormode="color")
+        EpsImagePlugin.gs_windows_binary = "./Ghostscript/gs10.03.0/bin/gswin64c.exe"
+        im = Image.open(io.BytesIO(ps.encode("utf-8")))
+        im.save('RED.png', format="PNG")

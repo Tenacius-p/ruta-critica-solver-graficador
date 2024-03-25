@@ -6,6 +6,8 @@
 # Distributed under terms of the MIT license.
 
 import csv
+from graficador import nodo
+from graficador import graficador
 
 nombre_archivo = 'tabla.csv'
 
@@ -52,9 +54,10 @@ def calcular_ls_lf(tareas, duracion_proyecto):
             tarea.ls = tarea.lf - tarea.duracion
 
 
+
+ultimos = []    # lista de nodos que se conectan al final
 tareas = []
 dependencias = []
-rutas_criticas = []
 encabezados = ["Tareas", "Duraciones", "Dependencias",
                "ES", "EF", "LS", "LF", "Holgura", "Rutas Criticas"]
 filas = []
@@ -88,7 +91,13 @@ calcular_es_ef(tareas)
 duracion_proyecto = max(tarea.ef for tarea in tareas)
 calcular_ls_lf(tareas, duracion_proyecto)
 
+#capa = 0
+nodos = [[], []]
+nodos[0].append(nodo("Inicio", 0, 0, 0, 0, 0, 0, 0))
+
 for indice, tarea in enumerate(tareas):
+    ruta_critica = "No"
+
     fila = {}
     fila["Tareas"] = tarea.nombre
     fila["Duraciones"] = tarea.duracion
@@ -98,7 +107,39 @@ for indice, tarea in enumerate(tareas):
     fila["LS"] = tarea.ls
     fila["LF"] = tarea.lf
     fila["Holgura"] = tarea.lf - tarea.ef
+    if tarea.lf - tarea.ef == 0: ruta_critica = "Si"
+    fila["Rutas Criticas"] = ruta_critica
+
     filas.append(fila)
+
+    ultimos.append(tarea.nombre)
+
+    if dependencias[indice] == '-':
+        nodos[1].append(nodo(tarea.nombre, tarea.duracion, 0, 0, tarea.es, tarea.ef
+                                                                , tarea.ls, tarea.lf))
+    else:
+        # busca en que capa esta la dependencia y hace append en una mas alta
+        # si no hay se crea una 
+        for capa in reversed(nodos):    # se tiene que considerar el que este en la capa mas alta
+            for dep in dependencias[indice]:
+                for nod in capa:
+                    if dep == nod.nombre:
+                        if nodos.index(capa) == len(nodos) - 1:
+                            nodos.append([])
+                        nodos[nodos.index(capa) + 1].append(nodo(tarea.nombre, tarea.duracion, 0, 0, tarea.es, tarea.ef
+                                                                                                    , tarea.ls, tarea.lf))
+                    
+                break
+
+
+nodos.append([nodo("Fin", 0, 0, 0)])
+
+for i in nodos:
+    print(i)
+
+graf = graficador(nodos)
+graf.draw()
+graf.save()
 
 with open(nombre_archivo, mode='w', newline='', encoding='utf-8') as archivo:
     escritor = csv.DictWriter(archivo, fieldnames=encabezados)
