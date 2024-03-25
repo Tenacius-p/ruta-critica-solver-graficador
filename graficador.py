@@ -103,15 +103,15 @@ class graficador:
 
     def __init__(self, nodos):
         self.nodos = nodos
-        turtle.screensize(1280, 720)
         self.tort = turtle.Turtle()
         self.tort.hideturtle()
         self.tort._tracer(False)
         self.tort.pensize(2)
 
     def draw(self):
-        capa_x = -400
-        
+        capa_x = -900
+        screen = turtle.Screen()
+        screen.setup(1920, 1080)
 
         for capa in self.nodos:
             cantidad_nodos = len(capa)

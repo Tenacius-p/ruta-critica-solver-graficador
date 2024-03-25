@@ -131,18 +131,14 @@ for indice, tarea in enumerate(tareas):
 
     # el nivel de un nodo esta definido por las dependencias
     # de sus dependencias : I depende de D que depende de B que depende de A que depende de inicio por lo que queda en el 
-    print(tarea.nombre)
-    print(calcualar_capa(tarea.nombre))
     capa_max = calcualar_capa(tarea.nombre)
+
     if capa_max == len(nodos) - 1:
         nodos.append([])
     nodos[capa_max].append(nodo(tarea.nombre, tarea.duracion, 0, 0, tarea.es, tarea.ef
                                                                         , tarea.ls, tarea.lf))
 
 nodos[-1].append(nodo("Fin", 0, 0, 0))
-
-for i in nodos:
-    print(i)
 
 graf = graficador(nodos)
 graf.draw()
