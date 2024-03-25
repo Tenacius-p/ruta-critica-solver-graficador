@@ -3,6 +3,53 @@ from PIL import Image
 from PIL import EpsImagePlugin
 import io
 
+
+# ------------------------- Clase Nodo ------------------------- #
+
+class nodo: 
+
+    def __init__(self, nombre, duracion, x, y, radio = 50, es = 0, ef = 0, ls = 0, lf = 0):
+        self.nombre = nombre
+        self.duracion = duracion
+        
+        self.es = es
+        self.ef = ef
+        self.ls = ls
+        self.lf = lf
+
+        self.x = x
+        self.y = y
+        self.radio = radio
+        self.dock_right = x + radio
+        self.dock_left = x - radio
+
+    def draw():
+        # ---------------- Circulo ---------------- #
+
+
+# ------------------------- Clase Graficador ------------------------- #
+
+class graficador:
+
+    def __init__(self, font = "Arial", size  = 20, format =  "normal", radio = 50):
+        
+        self.font = font
+        self.size = size
+        self.format = format
+        self.radio = radio
+        self.tort = turtle.Turtle()
+
+        self.tort.hideturtle()
+        self.tort.tracer(False)
+
+    def draw()
+        pass
+
+
+
+
+# ------------------------- Clase Graficador ------------------------- #
+
 t = turtle.Turtle()
 t.hideturtle()
 turtle.tracer(False)
