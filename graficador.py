@@ -5,12 +5,14 @@ import io
 
 # ------------------------- Funciones ------------------------- #
 def line(x_1, y_1, x_2,  y_2, t):
-
+    pensize = t.pensize()
+    t.pensize(1)
     t.penup()
     t.goto(x_1, y_1)
     t.pendown()
     t.goto(x_2, y_2)
     t.penup()
+    t.pensize(pensize)
 
 
 # ------------------------- Clase Nodo ------------------------- #
@@ -101,6 +103,7 @@ class graficador:
 
     def __init__(self, nodos):
         self.nodos = nodos
+        turtle.screensize(1280, 720)
         self.tort = turtle.Turtle()
         self.tort.hideturtle()
         self.tort._tracer(False)

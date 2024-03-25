@@ -54,6 +54,21 @@ def calcular_ls_lf(tareas, duracion_proyecto):
             tarea.ls = tarea.lf - tarea.duracion
 
 
+def calcualar_capa(nombre_tarea):
+    capas = []
+
+    for indice, tarea in enumerate(tareas):
+        if tarea.nombre == nombre_tarea:
+            dependencia = dependencias[indice]
+
+    for dep in dependencia:
+        for char in dep:
+            if char == '-':
+                return 1
+            elif char != ',':
+                capas.append(calcualar_capa(char))
+    return max(capas) + 1
+
 
 ultimos = []    # lista de nodos que se conectan al final
 tareas = []
@@ -114,25 +129,17 @@ for indice, tarea in enumerate(tareas):
 
     ultimos.append(tarea.nombre)
 
-    if dependencias[indice] == '-':
-        nodos[1].append(nodo(tarea.nombre, tarea.duracion, 0, 0, tarea.es, tarea.ef
-                                                                , tarea.ls, tarea.lf))
-    else:
-        # busca en que capa esta la dependencia y hace append en una mas alta
-        # si no hay se crea una 
-        for capa in reversed(nodos):    # se tiene que considerar el que este en la capa mas alta
-            for dep in dependencias[indice]:
-                for nod in capa:
-                    if dep == nod.nombre:
-                        if nodos.index(capa) == len(nodos) - 1:
-                            nodos.append([])
-                        nodos[nodos.index(capa) + 1].append(nodo(tarea.nombre, tarea.duracion, 0, 0, tarea.es, tarea.ef
-                                                                                                    , tarea.ls, tarea.lf))
-                    
-                break
+    # el nivel de un nodo esta definido por las dependencias
+    # de sus dependencias : I depende de D que depende de B que depende de A que depende de inicio por lo que queda en el 
+    print(tarea.nombre)
+    print(calcualar_capa(tarea.nombre))
+    capa_max = calcualar_capa(tarea.nombre)
+    if capa_max == len(nodos) - 1:
+        nodos.append([])
+    nodos[capa_max].append(nodo(tarea.nombre, tarea.duracion, 0, 0, tarea.es, tarea.ef
+                                                                        , tarea.ls, tarea.lf))
 
-
-nodos.append([nodo("Fin", 0, 0, 0)])
+nodos[-1].append(nodo("Fin", 0, 0, 0))
 
 for i in nodos:
     print(i)
