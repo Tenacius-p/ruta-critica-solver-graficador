@@ -14,6 +14,15 @@ def line(x_1, y_1, x_2,  y_2, t):
     t.penup()
     t.pensize(pensize)
 
+def buscar_nodo(nodos, nombre):
+    for capa in nodos:
+        for nodo in capa:
+            if nodo.nombre == nombre:
+                return nodo
+    return -1
+
+
+
 
 # ------------------------- Clase Nodo ------------------------- #
 class nodo: 
@@ -97,12 +106,17 @@ class nodo:
         tort.write(self.lf, align="center", font=(self.font, self.size, self.format))
 
 
+    def connect_left(self, nodo, tort):
+        line(self.dock_left , self.y, nodo.dock_right,  nodo.y, tort)
+
+
 
 # ------------------------- Clase Graficador ------------------------- #
 class graficador:
 
-    def __init__(self, nodos):
+    def __init__(self, nodos, dependencias):
         self.nodos = nodos
+        self.dependencias = dependencias
         self.tort = turtle.Turtle()
         self.tort.hideturtle()
         self.tort._tracer(False)
@@ -112,6 +126,8 @@ class graficador:
         capa_x = -900
         screen = turtle.Screen()
         screen.setup(1920, 1080)
+        counter = 0
+        ultimos = []
 
         for capa in self.nodos:
             cantidad_nodos = len(capa)
@@ -128,10 +144,21 @@ class graficador:
                 nodo.draw(self.tort)
                 nodo_y -= + (4 * nodo.radio)
 
+                if capa == self.nodos[-1]:
+                    for nodo_anterior in ultimos:
+                        nodo.connect_left(nodo_anterior, self.tort)
+                elif capa != self.nodos[0]:                
+                    ultimos.append(nodo)
+
+                    for char in self.dependencias[counter]:
+                        if char == '-':
+                            nodo.connect_left(buscar_nodo(self.nodos, "Inicio"), self.tort)
+                        elif char != ',':
+                            nodo.connect_left(buscar_nodo(self.nodos, char), self.tort)
+                    counter += 1
+
             capa_x += (3 * nodo.radio)
 
-
-        pass
 
     def save(self):
         ps = self.tort.getscreen().getcanvas().postscript(colormode="color")

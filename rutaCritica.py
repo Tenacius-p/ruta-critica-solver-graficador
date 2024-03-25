@@ -54,7 +54,7 @@ def calcular_ls_lf(tareas, duracion_proyecto):
             tarea.ls = tarea.lf - tarea.duracion
 
 
-def calcualar_capa(nombre_tarea):
+def calcular_capa(nombre_tarea):
     capas = []
 
     for indice, tarea in enumerate(tareas):
@@ -66,11 +66,10 @@ def calcualar_capa(nombre_tarea):
             if char == '-':
                 return 1
             elif char != ',':
-                capas.append(calcualar_capa(char))
+                capas.append(calcular_capa(char))
     return max(capas) + 1
 
 
-ultimos = []    # lista de nodos que se conectan al final
 tareas = []
 dependencias = []
 encabezados = ["Tareas", "Duraciones", "Dependencias",
@@ -127,11 +126,7 @@ for indice, tarea in enumerate(tareas):
 
     filas.append(fila)
 
-    ultimos.append(tarea.nombre)
-
-    # el nivel de un nodo esta definido por las dependencias
-    # de sus dependencias : I depende de D que depende de B que depende de A que depende de inicio por lo que queda en el 
-    capa_max = calcualar_capa(tarea.nombre)
+    capa_max = calcular_capa(tarea.nombre)
 
     if capa_max == len(nodos) - 1:
         nodos.append([])
@@ -139,8 +134,7 @@ for indice, tarea in enumerate(tareas):
                                                                         , tarea.ls, tarea.lf))
 
 nodos[-1].append(nodo("Fin", 0, 0, 0))
-
-graf = graficador(nodos)
+graf = graficador(nodos, dependencias)
 graf.draw()
 graf.save()
 
