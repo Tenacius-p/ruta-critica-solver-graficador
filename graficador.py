@@ -46,6 +46,10 @@ class nodo:
 
 
     def draw(self, tort):
+        # Si es parte de la ruta critica se pinta de rojo
+        if self.ef - self.lf == 0:
+            tort.color("red")
+
         # ---------------- Circulo ---------------- #
         tort.penup()
         tort.goto(self.x, self.y - self.radio)
@@ -103,14 +107,22 @@ class nodo:
         # LF
         tort.goto(self.x + self.radio / 4 , self.y - self.radio + padding)
         tort.write(self.lf, align="center", font=(self.font, self.size, self.format))
+        tort.color("black")
 
 
     def connect_left(self, nodo, tort):
+        # Si es parte de la ruta critica se pinta de rojo
+        if self.ef - self.lf == 0 and nodo.ef - nodo.lf == 0:
+            tort.color("red")
         line(self.dock_left , self.y, nodo.dock_right,  nodo.y, tort)
+        tort.color("black")
 
 
     def connect_right(self, nodo, tort):
+        if self.ef - self.lf == 0 and nodo.ef - nodo.lf == 0:
+            tort.color("red")
         line(self.dock_right,  self.y, nodo.dock_left , nodo.y, tort)
+        tort.color("black")
 
 
     def set_x(self, x):
