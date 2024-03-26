@@ -14,14 +14,13 @@ def line(x_1, y_1, x_2,  y_2, t):
     t.penup()
     t.pensize(pensize)
 
+
 def buscar_nodo(nodos, nombre):
     for capa in nodos:
         for nodo in capa:
             if nodo.nombre == nombre:
                 return nodo
     return -1
-
-
 
 
 # ------------------------- Clase Nodo ------------------------- #
@@ -111,17 +110,13 @@ class nodo:
 
 
     def connect_right(self, nodo, tort):
-        print(self.dock_right,  " ",self.y)
-        print(nodo.dock_left , " ", nodo.y)
         line(self.dock_right,  self.y, nodo.dock_left , nodo.y, tort)
 
-    
+
     def set_x(self, x):
         self.x = x
         self.dock_right = self.x + self.radio
         self.dock_left = self.x - self.radio
-
-
 
 
 # ------------------------- Clase Graficador ------------------------- #
@@ -167,7 +162,6 @@ class graficador:
                 if capa != self.nodos[-1] and capa != self.nodos[0]:
                     # Si el nodo no esta en la lista de dependencias se conecta al final
                     if nodo.nombre not in dependencias_limpio:
-                        print(nodo.nombre)
                         nodo.connect_right(buscar_nodo(self.nodos, "Fin"), self.tort)
 
                     if self.dependencias[counter] == '-':
@@ -180,19 +174,7 @@ class graficador:
                                     nodo.connect_left(buscar_nodo(self.nodos, char), self.tort)
                     counter += 1
             capa_x += (3 * nodo.radio)
-            '''
-                
-                    for nodo_anterior in ultimos:
-                        nodo.connect_left(nodo_anterior, self.tort)
-                elif capa != self.nodos[0]:                
 
-                    for char in self.dependencias[counter]:
-                        if char == '-':
-                            nodo.connect_left(buscar_nodo(self.nodos, "Inicio"), self.tort)
-                        elif char != ',':
-                            nodo.connect_left(buscar_nodo(self.nodos, char), self.tort)
-                    
-                    '''
     def save(self):
         ps = self.tort.getscreen().getcanvas().postscript(colormode="color")
         EpsImagePlugin.gs_windows_binary = "./Ghostscript/gs10.03.0/bin/gswin64c.exe"
