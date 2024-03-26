@@ -136,6 +136,7 @@ class graficador:
         screen.setup(1920, 1080)
         counter = 0
         dependencias_limpio = []
+        ef_max = 0
 
         for dep in self.dependencias:
             for char in dep:
@@ -153,6 +154,13 @@ class graficador:
                 nodo_y += ( (cantidad_nodos - 1) * 2 * nodo.radio)
                     
             for nodo in capa:
+                # valores para nodo final
+                if ef_max < nodo.ef:
+                    ef_max = nodo.ef
+                
+                if nodo.nombre == "Fin":
+                    nodo.es = nodo.ef = nodo.ls = nodo.lf = ef_max
+
                 nodo.y = nodo_y
                 nodo.set_x(capa_x)
                 nodo.draw(self.tort)
