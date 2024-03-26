@@ -39,8 +39,8 @@ class nodo:
         self.x = x
         self.y = y
         self.radio = radio
-        self.dock_right = x + radio
-        self.dock_left = x - radio
+        self.dock_right = self.x + radio
+        self.dock_left = self.x - radio
         self.font = "Arial"
         self.size = 15
         self.format = "normal"
@@ -110,6 +110,19 @@ class nodo:
         line(self.dock_left , self.y, nodo.dock_right,  nodo.y, tort)
 
 
+    def connect_right(self, nodo, tort):
+        print(self.dock_right,  " ",self.y)
+        print(nodo.dock_left , " ", nodo.y)
+        line(self.dock_right,  self.y, nodo.dock_left , nodo.y, tort)
+
+    
+    def set_x(self, x):
+        self.x = x
+        self.dock_right = self.x + self.radio
+        self.dock_left = self.x - self.radio
+
+
+
 
 # ------------------------- Clase Graficador ------------------------- #
 class graficador:
@@ -127,7 +140,13 @@ class graficador:
         screen = turtle.Screen()
         screen.setup(1920, 1080)
         counter = 0
-        ultimos = []
+        dependencias_limpio = []
+
+        for dep in self.dependencias:
+            for char in dep:
+                if char != '-' and char != ',' and char not in dependencias_limpio:
+                    dependencias_limpio.append(char)
+
 
         for capa in self.nodos:
             cantidad_nodos = len(capa)
@@ -139,27 +158,41 @@ class graficador:
                 nodo_y += ( (cantidad_nodos - 1) * 2 * nodo.radio)
                     
             for nodo in capa:
-                nodo.x = capa_x
                 nodo.y = nodo_y
+                nodo.set_x(capa_x)
                 nodo.draw(self.tort)
                 nodo_y -= + (4 * nodo.radio)
 
-                if capa == self.nodos[-1]:
+                # Coneccion de nodos
+                if capa != self.nodos[-1] and capa != self.nodos[0]:
+                    # Si el nodo no esta en la lista de dependencias se conecta al final
+                    if nodo.nombre not in dependencias_limpio:
+                        print(nodo.nombre)
+                        nodo.connect_right(buscar_nodo(self.nodos, "Fin"), self.tort)
+
+                    if self.dependencias[counter] == '-':
+                        nodo.connect_left(buscar_nodo(self.nodos, "Inicio"), self.tort)
+
+                    else:
+                        for dep in self.dependencias[counter]:
+                            for char in dep:
+                                if char != '-' and char != ',':
+                                    nodo.connect_left(buscar_nodo(self.nodos, char), self.tort)
+                    counter += 1
+            capa_x += (3 * nodo.radio)
+            '''
+                
                     for nodo_anterior in ultimos:
                         nodo.connect_left(nodo_anterior, self.tort)
                 elif capa != self.nodos[0]:                
-                    ultimos.append(nodo)
 
                     for char in self.dependencias[counter]:
                         if char == '-':
                             nodo.connect_left(buscar_nodo(self.nodos, "Inicio"), self.tort)
                         elif char != ',':
                             nodo.connect_left(buscar_nodo(self.nodos, char), self.tort)
-                    counter += 1
-
-            capa_x += (3 * nodo.radio)
-
-
+                    
+                    '''
     def save(self):
         ps = self.tort.getscreen().getcanvas().postscript(colormode="color")
         EpsImagePlugin.gs_windows_binary = "./Ghostscript/gs10.03.0/bin/gswin64c.exe"
