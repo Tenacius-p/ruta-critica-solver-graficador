@@ -3,6 +3,8 @@ from PIL import Image
 from PIL import EpsImagePlugin
 import io
 
+g_radio = 50
+
 # ------------------------- Funciones ------------------------- #
 def line(x_1, y_1, x_2,  y_2, t):
     pensize = t.pensize()
@@ -26,7 +28,7 @@ def buscar_nodo(nodos, nombre):
 # ------------------------- Clase Nodo ------------------------- #
 class nodo: 
 
-    def __init__(self, nombre, duracion, x, y, es = 0, ef = 0, ls = 0, lf = 0, radio = 50):
+    def __init__(self, nombre, duracion, x, y, es = 0, ef = 0, ls = 0, lf = 0, radio = g_radio):
         self.nombre = nombre
         self.duracion = duracion
         
@@ -151,6 +153,8 @@ class graficador:
         ultimos = []
         ef_max = 0
 
+        capa_x = 0 - len(self.nodos) * g_radio * 3 / 2
+
         for dep in self.dependencias:
             for char in dep:
                 if char != '-' and char != ',' and char not in dependencias_limpio:
@@ -181,14 +185,12 @@ class graficador:
 
                 # Coneccion de nodos
                 if capa != self.nodos[-1] and capa != self.nodos[0]:
-
                     # Si el nodo no esta en la lista de dependencias se conecta al final
                     if nodo.nombre not in dependencias_limpio:
                         ultimos.append(nodo.nombre)
-
+                    
                     if self.dependencias[counter] == '-':
                         nodo.connect_left(buscar_nodo(self.nodos, "Inicio"), self.tort)
-
                     else:
                         for dep in self.dependencias[counter]:
                             for char in dep:
@@ -198,7 +200,6 @@ class graficador:
             capa_x += (3 * nodo.radio)
 
         # coneccion con nodos al final
-        print(ultimos)
         for nombre in ultimos:
             buscar_nodo(self.nodos, nombre).connect_right(buscar_nodo(self.nodos, "Fin"), self.tort)
 

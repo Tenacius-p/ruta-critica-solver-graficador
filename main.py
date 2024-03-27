@@ -3,10 +3,6 @@
 # 1 tienen como dependencia a alguno de la 0
 # aquellos nodos que no tengan dependientes se conectan al final
 
-
-
-
-# se crea el nodo inicio en (0, 0)
 # le sumo (3 * radio) a x
 # la distancia vertical entre los nodos es de (2 * radio), desde el centro (4 * radio)
 
