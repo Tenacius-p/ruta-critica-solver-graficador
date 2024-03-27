@@ -148,6 +148,7 @@ class graficador:
         screen.setup(1920, 1080)
         counter = 0
         dependencias_limpio = []
+        ultimos = []
         ef_max = 0
 
         for dep in self.dependencias:
@@ -180,9 +181,10 @@ class graficador:
 
                 # Coneccion de nodos
                 if capa != self.nodos[-1] and capa != self.nodos[0]:
+
                     # Si el nodo no esta en la lista de dependencias se conecta al final
                     if nodo.nombre not in dependencias_limpio:
-                        nodo.connect_right(buscar_nodo(self.nodos, "Fin"), self.tort)
+                        ultimos.append(nodo.nombre)
 
                     if self.dependencias[counter] == '-':
                         nodo.connect_left(buscar_nodo(self.nodos, "Inicio"), self.tort)
@@ -194,6 +196,11 @@ class graficador:
                                     nodo.connect_left(buscar_nodo(self.nodos, char), self.tort)
                     counter += 1
             capa_x += (3 * nodo.radio)
+
+        # coneccion con nodos al final
+        print(ultimos)
+        for nombre in ultimos:
+            buscar_nodo(self.nodos, nombre).connect_right(buscar_nodo(self.nodos, "Fin"), self.tort)
 
     def save(self):
         ps = self.tort.getscreen().getcanvas().postscript(colormode="color")
