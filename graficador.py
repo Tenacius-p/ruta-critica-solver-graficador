@@ -28,9 +28,10 @@ def buscar_nodo(nodos, nombre):
 # ------------------------- Clase Nodo ------------------------- #
 class nodo: 
 
-    def __init__(self, nombre, duracion, x, y, es = 0, ef = 0, ls = 0, lf = 0, radio = g_radio):
+    def __init__(self, nombre, duracion, x, y, dependencias, es = 0, ef = 0, ls = 0, lf = 0, radio = g_radio):
         self.nombre = nombre
         self.duracion = duracion
+        self.dependencias = dependencias
         
         self.es = es
         self.ef = ef
@@ -154,7 +155,6 @@ class graficador:
         ef_max = 0
 
         capa_x = 0 - len(self.nodos) * g_radio * 3 / 2
-
         for dep in self.dependencias:
             for char in dep:
                 if char != '-' and char != ',' and char not in dependencias_limpio:
@@ -188,14 +188,13 @@ class graficador:
                     # Si el nodo no esta en la lista de dependencias se conecta al final
                     if nodo.nombre not in dependencias_limpio:
                         ultimos.append(nodo.nombre)
-                    
-                    if self.dependencias[counter] == '-':
+
+                    if nodo.dependencias == '-':
                         nodo.connect_left(buscar_nodo(self.nodos, "Inicio"), self.tort)
                     else:
-                        for dep in self.dependencias[counter]:
-                            for char in dep:
-                                if char != '-' and char != ',':
-                                    nodo.connect_left(buscar_nodo(self.nodos, char), self.tort)
+                        for char in nodo.dependencias:
+                            if char != '-' and char != ',':
+                                nodo.connect_left(buscar_nodo(self.nodos, char), self.tort)
                     counter += 1
             capa_x += (3 * nodo.radio)
 

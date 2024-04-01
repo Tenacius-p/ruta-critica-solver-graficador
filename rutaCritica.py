@@ -61,13 +61,13 @@ def calcular_capa(nombre_tarea):
         if tarea.nombre == nombre_tarea:
             dependencia = dependencias[indice]
 
-    for dep in dependencia:
-        for char in dep:
-            if char == '-':
+            if dependencia == '-':
                 return 1
-            elif char != ',':
-                capas.append(calcular_capa(char))
-    return max(capas) + 1
+
+            for char in dependencia:
+                if char != ',':
+                    capas.append(calcular_capa(char))
+            return (max(capas) + 1)
 
 
 tareas = []
@@ -107,7 +107,7 @@ calcular_ls_lf(tareas, duracion_proyecto)
 
 #capa = 0
 nodos = [[], []]
-nodos[0].append(nodo("Inicio", 0, 0, 0, 0, 0, 0, 0))
+nodos[0].append(nodo("Inicio", 0, 0, 0, '', 0, 0, 0, 0))
 
 for indice, tarea in enumerate(tareas):
     ruta_critica = "No"
@@ -130,10 +130,11 @@ for indice, tarea in enumerate(tareas):
 
     if capa_max == len(nodos) - 1:
         nodos.append([])
-    nodos[capa_max].append(nodo(tarea.nombre, tarea.duracion, 0, 0, tarea.es, tarea.ef
+
+    nodos[capa_max].append(nodo(tarea.nombre, tarea.duracion, 0, 0, dependencias[indice], tarea.es, tarea.ef
                                                                         , tarea.ls, tarea.lf))
 
-nodos[-1].append(nodo("Fin", 0, 0, 0))
+nodos[-1].append(nodo("Fin", 0, 0, 0, ''))
 graf = graficador(nodos, dependencias)
 graf.draw()
 graf.save()
