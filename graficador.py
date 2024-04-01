@@ -1,3 +1,14 @@
+# los diferentes "niveles" de nodos se representan con una lista 2d
+# aquellos nodos que no tengan dependientes se conectan al final
+
+# la distancia horizontal es de (3 * radio)
+# la distancia vertical es de (2 * radio)
+
+# se calcula y:
+#               siendo n el numero de nodos en la lista
+#               el primero va en y + ( (n - 1) * 2 * r ) y desde el centro va en ( y + (4 * radio) )
+
+
 import turtle
 from PIL import Image
 from PIL import EpsImagePlugin
