@@ -5,6 +5,7 @@ Script para resolver problemas de ruta critica de Organizacion 3
 
 - python3
 - virtualenv
+- PIL (pillow)
 
 # Pasos para ejecutar el script
 
