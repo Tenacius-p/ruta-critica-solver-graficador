@@ -157,9 +157,9 @@ class graficador:
         self.tort.pensize(2)
 
     def draw(self):
-        capa_x = 2 * g_radio - len(self.nodos) * g_radio * 3 / 2
+        capa_x = g_radio - len(self.nodos) * g_radio * 3 / 2
         screen = turtle.Screen()
-        screen_length = abs(capa_x) * 3
+        screen_length = - (capa_x * 2) + 3 * g_radio
         screen_height = len(max(self.nodos, key=len)) * 4 * g_radio
         counter = 0
         dependencias_limpio = []
