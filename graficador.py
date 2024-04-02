@@ -157,15 +157,17 @@ class graficador:
         self.tort.pensize(2)
 
     def draw(self):
-        capa_x = -900
+        capa_x = 2 * g_radio - len(self.nodos) * g_radio * 3 / 2
         screen = turtle.Screen()
-        screen.setup(1920, 1080)
+        screen_length = abs(capa_x) * 3
+        screen_height = len(max(self.nodos, key=len)) * 4 * g_radio
         counter = 0
         dependencias_limpio = []
         ultimos = []
         ef_max = 0
 
-        capa_x = 0 - len(self.nodos) * g_radio * 3 / 2
+        screen.setup(screen_length, screen_height)
+
         for dep in self.dependencias:
             for char in dep:
                 if char != '-' and char != ',' and char not in dependencias_limpio:
