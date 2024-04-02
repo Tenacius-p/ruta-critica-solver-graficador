@@ -98,6 +98,7 @@ def calcular_capa(nombre_tarea):
 
 tareas = []
 dependencias = []
+rutas_criticas = []
 encabezados = ["Tareas", "Duraciones", "Dependencias",
                "ES", "EF", "LS", "LF", "Holgura", "Rutas Criticas"]
 filas = []
